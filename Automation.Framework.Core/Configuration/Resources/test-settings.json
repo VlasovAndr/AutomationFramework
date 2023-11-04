@@ -1,0 +1,30 @@
+{
+  "framework": {
+    "Enviroment": "qa", // [qa/qa02] Choose enviroment for testrun
+    "DownloadedLocation": "", // Default is blank & consider under Download Folder. User can provide there location to download data.
+    "StepScreenShot": "off", // [on/off] Default is off. To get screen shot for each step mention ON otherwise screen shot of failure will be added in extent report.
+    "ExtentReportPortalUrl": "", // Default as mentioned. Recommended to have seperate report portal setup for each team.
+    "ExtentReportToPortal": "off", // [on/off] Default is off. Report push to portal if mentioned ON.
+    "LogLevel": "INFORMATION" // [ALL/DEBUG/INFORMATION/WARN/ERROR/FATAL] Default:"DEBUG. ALL < DEBUG < INFORMATION < WARN < ERROR < FATAL.
+  },
+
+  "driver": {
+    "BrowserType": "chrome", // [chrome/firefox/ie/safari]Default Browser Chrome 
+    "GridHubUrl": "http", // default is local. Grid url format --https://localhost:4444/wd/hub 
+    "WaitSeconds": 10,
+    "Headless": false
+  },
+
+  "enviroment": {
+    "qa": {
+      "Url": "https://demoqa.com",
+      "UserName": "Adminqa",
+      "Password": "adminqa"
+    },
+    "qa02": {
+      "Url": "https://demoqa02.com/",
+      "UserName": "Adminqa02",
+      "Password": "adminqa02"
+    }
+  }
+}
