@@ -26,6 +26,15 @@ public class LeftNavPanel
         ToggleLeftPanelMenu(menu, false);
     }
 
+    public void OpenSubMenu(string subMenuName)
+    {
+        var subMenu = browser.FindElement(repo.ElementsSubMenuByName(subMenuName), 20);
+        browser.ExecuteAsyncJSScriptForElement("arguments[0].scrollIntoView();", subMenu);
+        subMenu.Click();
+
+        log.Information($"'{subMenuName}' submenu is opened");
+    }
+
     private void ToggleLeftPanelMenu(string menu, bool expand)
     {
         var isPanelOpened = browser.GetElementFromDOM(repo.LeftMenuContent(menu))
@@ -37,15 +46,6 @@ public class LeftNavPanel
             browser.FindElement(repo.LeftMenuByName(menu)).Click();
         }
 
-        log.Information($"Execute ToggleLeftPanelMenu method with {(expand ? "expand" : "collapse")}");
-    }
-
-    public void OpenSubMenu(string subMenuName)
-    {
-        var subMenu = browser.FindElement(repo.ElementsSubMenuByName(subMenuName), 20);
-        browser.ExecuteAsyncJSScriptForElement("arguments[0].scrollIntoView();", subMenu);
-        subMenu.Click();
-
-        log.Information($"Execute OpenSubMenu method for menu: {subMenuName}");
+        log.Information($"Left panel is {(expand ? "expanded" : "collapsed")} for '{menu}' menu");
     }
 }

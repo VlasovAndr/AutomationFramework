@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Bogus" Version="34.0.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0-preview-23503-02" />
     <PackageReference Include="coverlet.collector" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -21,6 +22,11 @@
     <PackageReference Include="Serilog.Enrichers.Thread" Version="3.2.0-dev-00752" />
     <PackageReference Include="Serilog.Sinks.Console" Version="5.0.0-dev-00923" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.1-dev-00968" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Utils\Extensions\" />
+    <Folder Include="Utils\" />
   </ItemGroup>
 
 </Project>
