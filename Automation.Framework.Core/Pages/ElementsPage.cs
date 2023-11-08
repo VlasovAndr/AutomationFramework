@@ -1,4 +1,5 @@
 ﻿using Automation.Framework.Common.Abstractions;
+using Automation.Framework.Common.Models;
 using Automation.Framework.Core.Configuration;
 using Automation.Framework.Core.Pages.Components;
 using Automation.Framework.Core.Pages.Locators;
@@ -26,83 +27,93 @@ public class ElementsPage : PageBase
     public void Open()
     {
         browser.NavigateToUrl($"{BaseUrl}/elements");
-        log.Information($"Open ElementsPage");
+        log.Information($"Elements page is opened");
     }
 
     public string GetTitleOnMainPage()
     {
-        log.Information($"Execute GetTitleOnMainPage CommonAction mehod");
+        var title = browser.FindElement(repo.MenuTitle).Text;
+        log.Information($"Current title is '{title}'");
+
         return browser.FindElement(repo.MenuTitle).Text;
     }
 
     #region Text Box
+    public void FillUserInfo(User user)
+    {
+        FillFullNameField(user.FullName);
+        FillEmailField(user.Email);
+        FillCurrentAddressField(user.CurrentAddress);
+        FillPermanentAddressField(user.PermanentAddress);
+    }
 
     public void FillFullNameField(string fullName)
     {
-        browser.FindElement(repo.FullNameField).SendKeys(fullName);
-
-        log.Information($"Execute FillFullNameField ElementsAction method");
+        browser.EnterText(repo.FullNameField, fullName);
+        log.Information($"Full Name field is filled with - '{fullName}'");
     }
 
     public void FillEmailField(string email)
     {
         browser.EnterText(repo.EmailField, email);
-
-        log.Information($"Execute FillEmailField ElementsAction method");
+        log.Information($"Email field is filled with - '{email}'");
     }
 
     public void FillCurrentAddressField(string curAddress)
     {
         browser.FindElement(repo.CurrentAddressField).SendKeys(curAddress);
-
-        log.Information($"Execute FillCurrentAddressField ElementsAction method");
+        log.Information($"Current Address field is filled with - '{curAddress}'");
     }
 
-    public void PermanentAddressField(string permAddress)
+    public void FillPermanentAddressField(string permAddress)
     {
         browser.FindElement(repo.PermanentAddressField).SendKeys(permAddress);
-
-        log.Information($"Execute PermanentAddressField ElementsAction method");
+        log.Information($"PermanentAddress field is filled with - '{permAddress}'");
     }
 
-    public void ClickSubbmitButton()
+    public void ClickSubmitButton()
     {
         IWebElement submitButton = browser.FindElement(repo.SubmitButton);
         browser.ExecuteAsyncJSScriptForElement("arguments[0].scrollIntoView();", submitButton);
         submitButton.Click();
+        log.Information($"Click on 'Subbmit' button");
+    }
 
-        log.Information($"Execute ClickSubbmitButton ElementsAction method");
+    public string GetOutputWindowText()
+    {
+        log.Information($"Getting output text");
+        var outputText = browser.FindElement(repo.OutputMessage).Text;
 
+        return outputText;
     }
 
     public void ValidatOutputContainsValue(string expOutMessage)
     {
-        log.Information($"Execute ValidatOutputContainsValue ElementsAction method");
-
+        log.Information($"Validating output text");
         var actualOutMessage = browser.FindElement(repo.OutputMessage).Text;
 
         actualOutMessage.Should()
             .Contain(expOutMessage,
             $"Actual Output message - '{actualOutMessage}' does contain expected - '{expOutMessage}'");
+    }
 
-        //Assert.IsTrue(isButtonVisible,
-        //Assert.True(actualOutMessage.Contains(expOutMessage),
-        //    $"Actual Output message - '{actualOutMessage}' does contain expected - '{expOutMessage}'");
+    public bool isOutputWindowPresent()
+    {
+        log.Information($"Checking presence of output window");
+        var outputField = browser.GetElementFromDOM(repo.OutputMessage);
+
+        return outputField.Displayed;
     }
 
     public void ValidatEmptyOutput()
     {
-        log.Information($"Execute ValidatEmptyOutput ElementsAction method");
-
+        log.Information($"Checking that output window is empty");
         var outputField = browser.GetElementFromDOM(repo.OutputMessage);
         var isOutputEmpty = string.IsNullOrEmpty(outputField.Text) && !outputField.Displayed;
 
         isOutputEmpty
             .Should()
             .BeTrue($"Output message is not empty. Current value - '{outputField.Text}'");
-        //Assert.IsTrue(isButtonVisible,
-        //Assert.True(isOutputEmpty,
-        //    $"Output message is not empty. Current value - '{outputField.Text}'");
     }
 
     #endregion

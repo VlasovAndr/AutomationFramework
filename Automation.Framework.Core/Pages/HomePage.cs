@@ -17,20 +17,20 @@ public class HomePage : PageBase
     public void Open()
     {
         browser.NavigateToUrl(BaseUrl);
-        log.Information($"Open HomePage");
+        log.Information($"Home page is opened");
     }
 
-    public void ClickOnStartmMenu(string menu)
+    public void ClickOnStartMenu(string menu)
     {
         browser.FindElement(repo.StartMenuByName(menu)).Click();
-        log.Information($"Execute ClickOnStartItemMenu CommonAction mehod");
+        log.Information($"'{menu}' start menu is opened");
     }
 
-    public void ClickOnElementsMenu() => ClickOnStartmMenu("Elements");
-    public void ClickOnFormsMenu() => ClickOnStartmMenu("Forms");
-    public void ClickOnAlertsFrameWindowsMenu() => ClickOnStartmMenu("Alerts, Frame & Windows");
-    public void ClickOnWidgetsMenu() => ClickOnStartmMenu("Widgets");
-    public void ClickOnInteractionsMenu() => ClickOnStartmMenu("Interactions");
-    public void ClickOnBookStoreApplicationMenu() => ClickOnStartmMenu("Book Store Application");
+    public void ClickOnElementsMenu() => ClickOnStartMenu("Elements");
+    public void ClickOnFormsMenu() => ClickOnStartMenu("Forms");
+    public void ClickOnAlertsFrameWindowsMenu() => ClickOnStartMenu("Alerts, Frame & Windows");
+    public void ClickOnWidgetsMenu() => ClickOnStartMenu("Widgets");
+    public void ClickOnInteractionsMenu() => ClickOnStartMenu("Interactions");
+    public void ClickOnBookStoreApplicationMenu() => ClickOnStartMenu("Book Store Application");
 
 }
