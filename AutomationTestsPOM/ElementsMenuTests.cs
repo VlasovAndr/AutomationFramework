@@ -1,10 +1,12 @@
+using Automation.Framework.Common.Params.Consts;
+using Automation.Framework.Common.Services;
 using Automation.Framework.Core.Pages;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 
-[assembly: LevelOfParallelism(5)]
+[assembly: LevelOfParallelism(3)]
 
 namespace AutomationTestsPOM;
 
@@ -22,15 +24,15 @@ public class ElementsMenuTests : TestBase
 
     public static string[] MenuName =
     {
-        "Text Box",
-        "Check Box",
-        "Radio Button",
-        "Web Tables",
-        "Buttons",
-        "Links",
-        "Broken Links - Images",
-        "Upload and Download",
-        "Dynamic Properties"
+        LeftSubMenu.TextBox,
+        LeftSubMenu.CheckBox,
+        LeftSubMenu.RadioButton,
+        LeftSubMenu.WebTables,
+        LeftSubMenu.Buttons,
+        LeftSubMenu.Links,
+        LeftSubMenu.BrokenLinksImages,
+        LeftSubMenu.UploadAndDownload,
+        LeftSubMenu.DynamicProperties
     };
 
     [Parallelizable(ParallelScope.All)]
@@ -42,4 +44,25 @@ public class ElementsMenuTests : TestBase
         var title = elementsPage.GetTitleOnMainPage();
         title.Should().Be(name);
     }
+
+    [Test]
+    public void TextboxValidData()
+    {
+        var user = new DataGeneratorService().GenerateRandomUser();
+
+        elementsPage.Open();
+        elementsPage.LeftPanel.OpenSubMenu(LeftSubMenu.TextBox);
+        elementsPage.FillUserInfo(user);
+        elementsPage.ClickSubmitButton();
+
+        var outputWindowState = elementsPage.isOutputWindowPresent();
+        outputWindowState.Should().BeTrue();
+
+        var outputWindowText = elementsPage.GetOutputWindowText();
+        outputWindowText.Should().Contain($"Name:{user.FullName}");
+        outputWindowText.Should().Contain($"Email:{user.Email}");
+        outputWindowText.Should().Contain($"Current Address :{user.CurrentAddress}");
+        outputWindowText.Should().Contain($"Permananet Address :{user.PermanentAddress}");
+    }
+
 }
