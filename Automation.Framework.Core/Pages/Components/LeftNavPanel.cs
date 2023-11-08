@@ -8,6 +8,7 @@ public class LeftNavPanel
     private readonly IWebDriverWrapper browser;
     private readonly LeftNavPanelLocators repo;
     private readonly ILogging log;
+    private const string COMPONENT_NAME = "Left Navigation Panel";
 
     public LeftNavPanel(IWebDriverWrapper browser, LeftNavPanelLocators repo, ILogging log)
     {
@@ -32,7 +33,7 @@ public class LeftNavPanel
         browser.ExecuteAsyncJSScriptForElement("arguments[0].scrollIntoView();", subMenu);
         subMenu.Click();
 
-        log.Information($"'{subMenuName}' submenu is opened");
+        log.Information($"|{COMPONENT_NAME}| '{subMenuName}' submenu is opened ");
     }
 
     private void ToggleLeftPanelMenu(string menu, bool expand)
@@ -46,6 +47,6 @@ public class LeftNavPanel
             browser.FindElement(repo.LeftMenuByName(menu)).Click();
         }
 
-        log.Information($"Left panel is {(expand ? "expanded" : "collapsed")} for '{menu}' menu");
+        log.Information($"|{COMPONENT_NAME}| Left panel is {(expand ? "expanded" : "collapsed")} for '{menu}' menu");
     }
 }

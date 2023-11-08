@@ -12,6 +12,7 @@ public class ElementsPage : PageBase
 {
     private ElementsLocators repo;
     private readonly LeftNavPanel leftNavPanel;
+    private const string PAGE_NAME = "Elements Page";
 
     public LeftNavPanel LeftPanel => leftNavPanel;
 
@@ -27,13 +28,13 @@ public class ElementsPage : PageBase
     public void Open()
     {
         browser.NavigateToUrl($"{BaseUrl}/elements");
-        log.Information($"Elements page is opened");
+        log.Information($"|{PAGE_NAME}| {PAGE_NAME} is opened");
     }
 
     public string GetTitleOnMainPage()
     {
         var title = browser.FindElement(repo.MenuTitle).Text;
-        log.Information($"Current title is '{title}'");
+        log.Information($"|{PAGE_NAME}| Current title is '{title}'");
 
         return browser.FindElement(repo.MenuTitle).Text;
     }
@@ -50,25 +51,25 @@ public class ElementsPage : PageBase
     public void FillFullNameField(string fullName)
     {
         browser.EnterText(repo.FullNameField, fullName);
-        log.Information($"Full Name field is filled with - '{fullName}'");
+        log.Information($"|{PAGE_NAME}| Full Name field is filled with - '{fullName}'");
     }
 
     public void FillEmailField(string email)
     {
         browser.EnterText(repo.EmailField, email);
-        log.Information($"Email field is filled with - '{email}'");
+        log.Information($"|{PAGE_NAME}| Email field is filled with - '{email}'");
     }
 
     public void FillCurrentAddressField(string curAddress)
     {
         browser.FindElement(repo.CurrentAddressField).SendKeys(curAddress);
-        log.Information($"Current Address field is filled with - '{curAddress}'");
+        log.Information($"|{PAGE_NAME}| Current Address field is filled with - '{curAddress}'");
     }
 
     public void FillPermanentAddressField(string permAddress)
     {
         browser.FindElement(repo.PermanentAddressField).SendKeys(permAddress);
-        log.Information($"PermanentAddress field is filled with - '{permAddress}'");
+        log.Information($"|{PAGE_NAME}| Permanent Address field is filled with - '{permAddress}'");
     }
 
     public void ClickSubmitButton()
@@ -76,12 +77,12 @@ public class ElementsPage : PageBase
         IWebElement submitButton = browser.FindElement(repo.SubmitButton);
         browser.ExecuteAsyncJSScriptForElement("arguments[0].scrollIntoView();", submitButton);
         submitButton.Click();
-        log.Information($"Click on 'Subbmit' button");
+        log.Information($"|{PAGE_NAME}| Click on 'Subbmit' button");
     }
 
     public string GetOutputWindowText()
     {
-        log.Information($"Getting output text");
+        log.Information($"|{PAGE_NAME}| Getting output text");
         var outputText = browser.FindElement(repo.OutputMessage).Text;
 
         return outputText;
@@ -89,31 +90,20 @@ public class ElementsPage : PageBase
 
     public void ValidatOutputContainsValue(string expOutMessage)
     {
-        log.Information($"Validating output text");
+        log.Information($"|{PAGE_NAME}| Validating output text");
         var actualOutMessage = browser.FindElement(repo.OutputMessage).Text;
 
         actualOutMessage.Should()
             .Contain(expOutMessage,
-            $"Actual Output message - '{actualOutMessage}' does contain expected - '{expOutMessage}'");
+            $"|{PAGE_NAME}| Actual Output message - '{actualOutMessage}' does contain expected - '{expOutMessage}'");
     }
 
     public bool isOutputWindowPresent()
     {
-        log.Information($"Checking presence of output window");
+        log.Information($"|{PAGE_NAME}| Checking presence of output window");
         var outputField = browser.GetElementFromDOM(repo.OutputMessage);
 
         return outputField.Displayed;
-    }
-
-    public void ValidatEmptyOutput()
-    {
-        log.Information($"Checking that output window is empty");
-        var outputField = browser.GetElementFromDOM(repo.OutputMessage);
-        var isOutputEmpty = string.IsNullOrEmpty(outputField.Text) && !outputField.Displayed;
-
-        isOutputEmpty
-            .Should()
-            .BeTrue($"Output message is not empty. Current value - '{outputField.Text}'");
     }
 
     #endregion
