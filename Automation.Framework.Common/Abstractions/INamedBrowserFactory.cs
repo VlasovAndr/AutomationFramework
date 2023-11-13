@@ -5,7 +5,8 @@ namespace Automation.Framework.Core.WebUI.Selenium;
 
 public interface INamedBrowserFactory : IFactory<IWebDriver>
 {
-    Browsers Name { get; }
+    BrowserName Name { get; }
+    BrowserType Type { get; }
 }
 
 public interface IFactory<out T>

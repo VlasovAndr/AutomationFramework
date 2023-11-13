@@ -7,8 +7,9 @@ namespace Automation.Framework.Core.WebUI.Selenium.WebDriverFactory;
 
 public class FirefoxDriverFactory : INamedBrowserFactory
 {
+    public BrowserName Name => BrowserName.Firefox;
+    public BrowserType Type => BrowserType.Local;
     private TestRunConfiguration testRunConfiguration;
-    public Browsers Name => Browsers.Firefox;
     private ILogging log;
 
     public FirefoxDriverFactory(TestRunConfiguration testRunConfiguration, ILogging log)

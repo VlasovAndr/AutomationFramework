@@ -7,7 +7,8 @@ namespace Automation.Framework.Core.WebUI.Selenium.WebDriverFactory;
 
 public class ChromeDriverFactory : INamedBrowserFactory
 {
-    public Browsers Name => Browsers.Chrome;
+    public BrowserName Name => BrowserName.Chrome;
+    public BrowserType Type => BrowserType.Local;
     private TestRunConfiguration testRunConfiguration;
     private ILogging log;
 
@@ -35,13 +36,13 @@ public class ChromeDriverFactory : INamedBrowserFactory
         options.AddUserProfilePreference("profile.cookie_controls_mode", 0);
         if (testRunConfiguration.Driver.Headless) options.AddArgument("--headless=new");
 
-        var specificDriver = new ChromeDriver(options);
+        var webDriver = new ChromeDriver(options);
 
-        //specificDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-        //specificDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
-        //specificDriver.Manage().Timeouts().AsynchronousJavaScript = TimeSpan.FromSeconds(10);
-        specificDriver.Manage().Window.Maximize();
+        //webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+        //webDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
+        //webDriver.Manage().Timeouts().AsynchronousJavaScript = TimeSpan.FromSeconds(10);
+        webDriver.Manage().Window.Maximize();
 
-        return specificDriver;
+        return webDriver;
     }
 }
