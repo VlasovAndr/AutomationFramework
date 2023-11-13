@@ -9,13 +9,13 @@ public class TestRunConfiguration
     public DriverConfig Driver { get; set; }
     public TargetEnvironment TargetEnvironment { get; set; }
     public FrameworkConfig Framework { get; set; }
-    private ILogging _log;
-    private IDefaultVariables _defaultVariables;
+    private ILogging log;
+    private IDefaultVariables defaultVar;
 
-    public TestRunConfiguration(ILogging log, IDefaultVariables defaultVariables)
+    public TestRunConfiguration(ILogging log, IDefaultVariables defaultVar)
     {
-        _log = log;
-        _defaultVariables = defaultVariables;
+        this.log = log;
+        this.defaultVar = defaultVar;
         Configurate();
     }
 
@@ -23,7 +23,7 @@ public class TestRunConfiguration
     {
         try
         {
-            var configData = File.ReadAllText(_defaultVariables.Config);
+            var configData = File.ReadAllText(defaultVar.Config);
             JObject data = JObject.Parse(configData);
 
             JToken driverSection = data["driver"];
@@ -37,18 +37,18 @@ public class TestRunConfiguration
 
             TargetEnvironment = data["enviroment"][effectiveTargetEnv.ToLower()].ToObject<TargetEnvironment>();
 
-            _log.Information($"Selected target environment: {effectiveTargetEnv}.");
+            log.Information($"Selected target environment: {effectiveTargetEnv}.");
 
         }
         catch (JsonException ex)
         {
-            _log.Error($"Error deserializing configuration: " + ex.Message);
+            log.Error($"Error deserializing configuration: " + ex.Message);
             throw new ArgumentException("Error deserializing configuration: " + ex.Message, ex);
 
         }
         catch (Exception ex)
         {
-            _log.Error($"Error while configuration: " + ex.Message);
+            log.Error($"Error while configuration: " + ex.Message);
             throw new ArgumentException("Error while configuration: " + ex.Message, ex);
         }
     }
