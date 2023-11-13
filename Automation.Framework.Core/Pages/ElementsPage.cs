@@ -3,7 +3,6 @@ using Automation.Framework.Common.Models;
 using Automation.Framework.Core.Configuration;
 using Automation.Framework.Core.Pages.Components;
 using Automation.Framework.Core.Pages.Locators;
-using FluentAssertions;
 using OpenQA.Selenium;
 
 namespace Automation.Framework.Core.Pages;
@@ -86,16 +85,6 @@ public class ElementsPage : PageBase
         var outputText = browser.FindElement(repo.OutputMessage).Text;
 
         return outputText;
-    }
-
-    public void ValidatOutputContainsValue(string expOutMessage)
-    {
-        log.Information($"|{PAGE_NAME}| Validating output text");
-        var actualOutMessage = browser.FindElement(repo.OutputMessage).Text;
-
-        actualOutMessage.Should()
-            .Contain(expOutMessage,
-            $"|{PAGE_NAME}| Actual Output message - '{actualOutMessage}' does contain expected - '{expOutMessage}'");
     }
 
     public bool isOutputWindowPresent()
