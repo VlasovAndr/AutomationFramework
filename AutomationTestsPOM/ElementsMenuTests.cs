@@ -35,9 +35,9 @@ public class ElementsMenuTests : TestBase
         LeftSubMenu.DynamicProperties
     };
 
-    [Parallelizable(ParallelScope.All)]
     [TestCaseSource(nameof(MenuNames))]
     [Category("Elements_LeftPanel")]
+    [Test, Property("TestRailId", "C000001")]
     public void LeftPanelNavigationTest(string name)
     {
         elementsPage.Open();
@@ -47,7 +47,7 @@ public class ElementsMenuTests : TestBase
         title.Should().Be(name);
     }
 
-    [Test]
+    [Test, Property("TestRailId", "C000002")]
     [Category("Elements_TextBox")]
     public void TextboxValidData()
     {
@@ -67,7 +67,7 @@ public class ElementsMenuTests : TestBase
         outputWindowText.Should().Contain($"Permananet Address :{user.PermanentAddress}");
     }
 
-    [Test]
+    [Test, Property("TestRailId", "C000003")]
     [Category("Elements_TextBox")]
     public void TextboxEmptyField()
     {
