@@ -1,18 +1,19 @@
 ﻿using Automation.Framework.Common.Abstractions;
 using Automation.Framework.Core.Configuration;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Firefox;
 
 namespace Automation.Framework.Core.WebUI.Selenium.WebDriverFactory;
 
-public class FirefoxDriverFactory : INamedBrowserFactory
+public class RemoteFirefoxDriverFactory : INamedBrowserFactory
 {
-    public BrowserName Name => BrowserName.Firefox;
-    public BrowserType Type => BrowserType.Local;
+    public BrowserName Name => BrowserName.Chrome;
+    public BrowserType Type => BrowserType.Remote;
     private TestRunConfiguration testRunConfiguration;
     private ILogging log;
 
-    public FirefoxDriverFactory(TestRunConfiguration testRunConfiguration, ILogging log)
+    public RemoteFirefoxDriverFactory(TestRunConfiguration testRunConfiguration, ILogging log)
     {
         this.testRunConfiguration = testRunConfiguration;
         this.log = log;
@@ -20,7 +21,7 @@ public class FirefoxDriverFactory : INamedBrowserFactory
 
     public IWebDriver Create()
     {
-        log.Debug("Creating FirefoxDriver");
+        log.Debug("Creating Remote Firefox Driver");
 
         var options = new FirefoxOptions();
         options.SetPreference("browser.download.prompt_for_download", false);
@@ -34,13 +35,16 @@ public class FirefoxDriverFactory : INamedBrowserFactory
         options.SetPreference("network.cookie.cookieBehavior", 0);
         if (testRunConfiguration.Driver.Headless) options.AddArgument("--headless=new");
 
-        var specificDriver = new FirefoxDriver(options);
+        options.AddAdditionalOption("selenoid:options", new Dictionary<string, object>
+        {
+            ["enableLog"] = true,
+            ["enableVnc"] = true,
+            ["enableVideo"] = false
+        });
 
-        //specificDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-        //specificDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
-        //specificDriver.Manage().Timeouts().AsynchronousJavaScript = TimeSpan.FromSeconds(10);
-        specificDriver.Manage().Window.Maximize();
+        var webDriver = new RemoteWebDriver(new Uri($"{testRunConfiguration.Driver.GridHubUrl}"), options.ToCapabilities());
+        webDriver.Manage().Window.Maximize();
 
-        return specificDriver;
+        return webDriver;
     }
 }

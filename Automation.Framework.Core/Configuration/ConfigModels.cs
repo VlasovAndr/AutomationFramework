@@ -11,7 +11,8 @@ public class TargetEnvironment
 
 public class DriverConfig
 {
-    public Browsers BrowserType { get; set; }
+    public BrowserName BrowserName { get; set; }
+    public BrowserType BrowserType { get; set; }
     public string GridHubUrl { get; set; }
     public int WaitSeconds { get; set; }
     public bool Headless { get; set; }

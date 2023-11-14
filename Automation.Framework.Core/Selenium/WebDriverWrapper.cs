@@ -12,25 +12,25 @@ public class WebDriverWrapper : IWebDriverWrapper
     public IWebDriver WebDriver => webDriverService.Value;
     public bool IsWebDriverCreated => webDriverService.IsValueCreated;
     private Lazy<IWebDriver> webDriverService;
-    private readonly IServiceProvider _serviceProvider;
-    private readonly TestRunConfiguration _testRunConfiguration;
-    private ILogging _log;
+    private readonly IServiceProvider serviceProvider;
+    private readonly TestRunConfiguration config;
+    private ILogging log;
 
-    public WebDriverWrapper(IServiceProvider serviceProvider, ILogging log, TestRunConfiguration testRunConfiguration)
+    public WebDriverWrapper(IServiceProvider serviceProvider, ILogging log, TestRunConfiguration config)
     {
-        _serviceProvider = serviceProvider;
+        this.serviceProvider = serviceProvider;
+        this.config = config;
+        this.log = log;
         webDriverService = new Lazy<IWebDriver>(CreateWebDriver, true);
-        _testRunConfiguration = testRunConfiguration;
-        _log = log;
     }
 
     private IWebDriver CreateWebDriver()
     {
-        var factory = _serviceProvider.GetServices<INamedBrowserFactory>()
-            .FirstOrDefault(f => f.Name == _testRunConfiguration.Driver.BrowserType);
+        var factory = serviceProvider.GetServices<INamedBrowserFactory>()
+            .FirstOrDefault(f => f.Name == config.Driver.BrowserName && f.Type == config.Driver.BrowserType);
 
         if (factory == null)
-            throw new Exception($"No factory registered for {_testRunConfiguration.Driver.BrowserType} browser.");
+            throw new Exception($"No factory registered for {config.Driver.BrowserType} browser.");
 
         return factory.Create();
     }
@@ -48,7 +48,7 @@ public class WebDriverWrapper : IWebDriverWrapper
         }
         catch (Exception ex)
         {
-            _log.Error("Error occurred while closing driver. Message: " + ex.Message);
+            log.Error("Error occurred while closing driver. Message: " + ex.Message);
             throw new Exception(ex.Message);
         }
     }
@@ -89,7 +89,7 @@ public class WebDriverWrapper : IWebDriverWrapper
 
     public IWebElement FindElement(string xPath, string frameName, int timeout = 10)
     {
-        _log.Information($"Switch to frame '{frameName}' before try to find element.");
+        log.Information($"Switch to frame '{frameName}' before try to find element.");
         WebDriver.SwitchTo().Frame(frameName);
         CheckClickabilityOfElement(xPath, timeout);
         var element = WebDriver.FindElement(By.XPath(xPath));
@@ -122,11 +122,11 @@ public class WebDriverWrapper : IWebDriverWrapper
         }
         catch (WebDriverTimeoutException)
         {
-            _log.Error($"Element with xPath '{xPath}' is not сlickable.");
+            log.Error($"Element with xPath '{xPath}' is not сlickable.");
         }
         catch (Exception e)
         {
-            _log.Error($"An error occurred while searching for element with xPath '{xPath}'. Exception: {e.Message}");
+            log.Error($"An error occurred while searching for element with xPath '{xPath}'. Exception: {e.Message}");
             throw;
         }
 
@@ -146,11 +146,11 @@ public class WebDriverWrapper : IWebDriverWrapper
         }
         catch (WebDriverTimeoutException)
         {
-            _log.Error($"Element with xPath '{xPath}' was not visible within the specified timeout.");
+            log.Error($"Element with xPath '{xPath}' was not visible within the specified timeout.");
         }
         catch (Exception e)
         {
-            _log.Error($"An error occurred while searching for element with xPath '{xPath}'. Exception: {e.Message}");
+            log.Error($"An error occurred while searching for element with xPath '{xPath}'. Exception: {e.Message}");
         }
 
         return isPresented;
@@ -165,15 +165,14 @@ public class WebDriverWrapper : IWebDriverWrapper
         }
         catch (WebDriverTimeoutException e)
         {
-            _log.Error($"Element with xPath '{xPath}' is not exist in the current DOM model. Exception: {e.Message}");
+            log.Error($"Element with xPath '{xPath}' is not exist in the current DOM model. Exception: {e.Message}");
+            throw;
         }
         catch (Exception e)
         {
-            _log.Error($"An error occurred while searching for element with xPath '{xPath}'. Exception: {e.Message}");
+            log.Error($"An error occurred while searching for element with xPath '{xPath}'. Exception: {e.Message}");
             throw;
         }
-
-        throw new Exception($"Element with xPath '{xPath}' is not exist in the current DOM model");
     }
 
     public void MoveToElement(string xPath)
@@ -209,7 +208,7 @@ public class WebDriverWrapper : IWebDriverWrapper
 
     public void WaitForLoadingPage()
     {
-        WebDriverWait wait = new WebDriverWait(WebDriver, TimeSpan.FromSeconds(10));
+        WebDriverWait wait = new WebDriverWait(WebDriver, TimeSpan.FromSeconds(20));
         wait.Until(driver => ((IJavaScriptExecutor)WebDriver).ExecuteScript("return document.readyState").Equals("complete"));
     }
 

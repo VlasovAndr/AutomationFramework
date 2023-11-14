@@ -25,6 +25,8 @@ public class DIContainer
             serviceCollection.AddSingleton<TestRunConfiguration>();
             serviceCollection.AddSingleton<INamedBrowserFactory, ChromeDriverFactory>();
             serviceCollection.AddSingleton<INamedBrowserFactory, FirefoxDriverFactory>();
+            serviceCollection.AddSingleton<INamedBrowserFactory, RemoteChromeDriverFactory>();
+            serviceCollection.AddSingleton<INamedBrowserFactory, RemoteFirefoxDriverFactory>();
             serviceCollection.AddSingleton<IWebDriverWrapper, WebDriverWrapper>();
 
             serviceCollection.AddSingleton<PageBase>();

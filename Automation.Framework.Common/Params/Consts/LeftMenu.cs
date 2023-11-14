@@ -23,7 +23,6 @@ public static class LeftSubMenu
     public static string BrokenLinksImages => $"Broken Links - Images";
     public static string UploadAndDownload => $"Upload and Download";
     public static string DynamicProperties => $"Dynamic Properties";
-    public const string DynamicProperties2 = $"Dynamic Properties";
 
     #endregion
 }

@@ -1,18 +1,19 @@
 ﻿using Automation.Framework.Common.Abstractions;
 using Automation.Framework.Core.Configuration;
-using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Remote;
 
 namespace Automation.Framework.Core.WebUI.Selenium.WebDriverFactory;
 
-public class ChromeDriverFactory : INamedBrowserFactory
+public class RemoteChromeDriverFactory : INamedBrowserFactory
 {
     public BrowserName Name => BrowserName.Chrome;
-    public BrowserType Type => BrowserType.Local;
+    public BrowserType Type => BrowserType.Remote;
     private TestRunConfiguration testRunConfiguration;
     private ILogging log;
 
-    public ChromeDriverFactory(TestRunConfiguration testRunConfiguration, ILogging log)
+    public RemoteChromeDriverFactory(TestRunConfiguration testRunConfiguration, ILogging log)
     {
         this.testRunConfiguration = testRunConfiguration;
         this.log = log;
@@ -20,15 +21,13 @@ public class ChromeDriverFactory : INamedBrowserFactory
 
     public IWebDriver Create()
     {
-        log.Debug("Creating ChromeDriver");
+        log.Debug("Creating Remote Chrome Driver");
 
         var options = new ChromeOptions();
         options.AddUserProfilePreference("download.prompt_for_download", false);
         options.AddUserProfilePreference("plugins.always_open_pdf_externally", true);
         options.AddUserProfilePreference("browser.download.manager.showWhenStarting", false);
         options.AddUserProfilePreference("safebrowsing.enabled", "true");
-        //"no-sandbox" and "--disable-gpu" must work together. Or it will need to delete.
-        //"no-sandbox" parameter is usefull for running in container 
         options.AddArgument("no-sandbox");
         options.AddArgument("--disable-gpu");
         options.AddArgument("disable-popup-blocking");
@@ -36,11 +35,14 @@ public class ChromeDriverFactory : INamedBrowserFactory
         options.AddUserProfilePreference("profile.cookie_controls_mode", 0);
         if (testRunConfiguration.Driver.Headless) options.AddArgument("--headless=new");
 
-        var webDriver = new ChromeDriver(options);
+        options.AddAdditionalOption("selenoid:options", new Dictionary<string, object>
+        {
+            ["enableLog"] = true,
+            ["enableVnc"] = true,
+            ["enableVideo"] = false
+        });
 
-        //webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-        //webDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
-        //webDriver.Manage().Timeouts().AsynchronousJavaScript = TimeSpan.FromSeconds(10);
+        var webDriver = new RemoteWebDriver(new Uri($"{testRunConfiguration.Driver.GridHubUrl}"), options.ToCapabilities());
         webDriver.Manage().Window.Maximize();
 
         return webDriver;
