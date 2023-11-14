@@ -7,7 +7,6 @@ using NUnit.Framework.Interfaces;
 
 namespace AutomationTestsPOM;
 
-
 public class TestBase
 {
     public IServiceProvider container;
@@ -36,7 +35,7 @@ public class TestBase
         else if (outcome == TestStatus.Failed)
         {
             //webDriver.TakeScreenshot($"test_failed + {TestContext.CurrentContext.Test.FullName}");
-            log.Information($"Test failed for reason: {TestContext.CurrentContext.Result.Message}");
+            log.Error($"Test failed for reason: {TestContext.CurrentContext.Result.Message}");
         }
         else
         {
