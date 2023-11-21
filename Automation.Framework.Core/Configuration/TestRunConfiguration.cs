@@ -30,10 +30,24 @@ public class TestRunConfiguration
             Driver = data["driver"].ToObject<DriverConfig>();
             Framework = data["framework"].ToObject<FrameworkConfig>();
 
-            var envFromVariables = Environment.GetEnvironmentVariable("TARGET_ENVIRONMENT");
-            var effectiveTargetEnv = string.IsNullOrEmpty(envFromVariables)
+            var envFromVar = Environment.GetEnvironmentVariable("TARGET_ENVIRONMENT");
+            var browserFromVar = Environment.GetEnvironmentVariable("BROWSER_NAME");
+            var browserTypeFromVar = Environment.GetEnvironmentVariable("BROWSER_TYPE");
+
+            Enum.TryParse(browserFromVar, out BrowserName browserName);
+            Enum.TryParse(browserTypeFromVar, out BrowserType browserType);
+
+            Driver.BrowserName = string.IsNullOrEmpty(browserFromVar)
+                                             ? Driver.BrowserName
+                                             : browserName;
+
+            Driver.BrowserType = string.IsNullOrEmpty(browserTypeFromVar)
+                                             ? Driver.BrowserType
+                                             : browserType;
+
+            var effectiveTargetEnv = string.IsNullOrEmpty(envFromVar)
                                              ? Framework.Enviroment
-                                             : envFromVariables;
+                                             : envFromVar;
 
             TargetEnvironment = data["enviroment"][effectiveTargetEnv.ToLower()].ToObject<TargetEnvironment>();
 
