@@ -3,6 +3,8 @@ using Automation.Framework.Common.Services;
 using Automation.Framework.Core.Pages;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using NUnit.Allure.Attributes;
+using NUnit.Allure.Core;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 
@@ -13,6 +15,8 @@ namespace AutomationTestsPOM;
 [TestFixture]
 [Parallelizable(ParallelScope.All)]
 [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+[AllureNUnit]
+[AllureSuite("Elements menu")]
 public class ElementsMenuTests : TestBase
 {
     private readonly ElementsPage elementsPage;
@@ -37,7 +41,9 @@ public class ElementsMenuTests : TestBase
 
     [TestCaseSource(nameof(MenuNames))]
     [Category("Elements_LeftPanel")]
-    [Test, Property("TestRailId", "C000001")]
+    [AllureSubSuite("Elements_LeftPanel")]
+    [Test, Property("TMSId", "C000001")]
+    [Retry(3)]
     public void LeftPanelNavigationTest(string name)
     {
         elementsPage.Open();
@@ -47,8 +53,10 @@ public class ElementsMenuTests : TestBase
         title.Should().Be(name);
     }
 
-    [Test, Property("TestRailId", "C000002")]
+    [Test, Property("TMSId", "C000002")]
     [Category("Elements_TextBox")]
+    [AllureSubSuite("Elements_TextBox")]
+    [Retry(2)]
     public void TextboxValidData()
     {
         var user = new DataGeneratorService().GenerateRandomUser();
@@ -58,7 +66,7 @@ public class ElementsMenuTests : TestBase
         elementsPage.FillUserInfo(user);
         elementsPage.ClickSubmitButton();
 
-        var outputWindowState = elementsPage.isOutputWindowPresent();
+        var outputWindowState = elementsPage.IsOutputWindowPresent();
         outputWindowState.Should().BeTrue();
         var outputWindowText = elementsPage.GetOutputWindowText();
         outputWindowText.Should().Contain($"Name:{user.FullName}");
@@ -67,8 +75,10 @@ public class ElementsMenuTests : TestBase
         outputWindowText.Should().Contain($"Permananet Address :{user.PermanentAddress}");
     }
 
-    [Test, Property("TestRailId", "C000003")]
+    [Test, Property("TMSId", "C000003")]
     [Category("Elements_TextBox")]
+    [AllureSubSuite("Elements_TextBox")]
+    [Retry(2)]
     public void TextboxEmptyField()
     {
         elementsPage.Open();
