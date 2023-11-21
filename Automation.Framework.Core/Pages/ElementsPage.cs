@@ -3,6 +3,7 @@ using Automation.Framework.Common.Models;
 using Automation.Framework.Core.Configuration;
 using Automation.Framework.Core.Pages.Components;
 using Automation.Framework.Core.Pages.Locators;
+using NUnit.Allure.Attributes;
 using OpenQA.Selenium;
 
 namespace Automation.Framework.Core.Pages;
@@ -13,6 +14,7 @@ public class ElementsPage : PageBase
     private readonly LeftNavPanel leftNavPanel;
     private const string PAGE_NAME = "Elements Page";
 
+    private string PageUrl => $"{BaseUrl}/elements";
     public LeftNavPanel LeftPanel => leftNavPanel;
 
     public ElementsPage(ElementsLocators repo, IWebDriverWrapper browser, ILogging log,
@@ -24,12 +26,14 @@ public class ElementsPage : PageBase
         this.leftNavPanel = leftNavPanel;
     }
 
+    [AllureStep($"Open {PAGE_NAME}")]
     public void Open()
     {
-        browser.NavigateToUrl($"{BaseUrl}/elements");
+        browser.NavigateToUrl(PageUrl);
         log.Information($"|{PAGE_NAME}| {PAGE_NAME} is opened");
     }
 
+    [AllureStep($"Geting title on {PAGE_NAME}")]
     public string GetTitleOnMainPage()
     {
         var title = browser.FindElement(repo.MenuTitle).Text;
@@ -39,6 +43,7 @@ public class ElementsPage : PageBase
     }
 
     #region Text Box
+    [AllureStep("Fill user info fields")]
     public void FillUserInfo(User user)
     {
         FillFullNameField(user.FullName);
@@ -47,30 +52,35 @@ public class ElementsPage : PageBase
         FillPermanentAddressField(user.PermanentAddress);
     }
 
+    [AllureStep("Fill full name field")]
     public void FillFullNameField(string fullName)
     {
         browser.EnterText(repo.FullNameField, fullName);
         log.Information($"|{PAGE_NAME}| Full Name field is filled with - '{fullName}'");
     }
 
+    [AllureStep("Fill email field")]
     public void FillEmailField(string email)
     {
         browser.EnterText(repo.EmailField, email);
         log.Information($"|{PAGE_NAME}| Email field is filled with - '{email}'");
     }
 
+    [AllureStep("Fill currenta address field")]
     public void FillCurrentAddressField(string curAddress)
     {
         browser.FindElement(repo.CurrentAddressField).SendKeys(curAddress);
         log.Information($"|{PAGE_NAME}| Current Address field is filled with - '{curAddress}'");
     }
 
+    [AllureStep("Fill permanent address field")]
     public void FillPermanentAddressField(string permAddress)
     {
         browser.FindElement(repo.PermanentAddressField).SendKeys(permAddress);
         log.Information($"|{PAGE_NAME}| Permanent Address field is filled with - '{permAddress}'");
     }
 
+    [AllureStep("Click on submit button")]
     public void ClickSubmitButton()
     {
         IWebElement submitButton = browser.FindElement(repo.SubmitButton);
@@ -79,6 +89,7 @@ public class ElementsPage : PageBase
         log.Information($"|{PAGE_NAME}| Click on 'Subbmit' button");
     }
 
+    [AllureStep("Getting output text")]
     public string GetOutputWindowText()
     {
         log.Information($"|{PAGE_NAME}| Getting output text");
@@ -87,7 +98,8 @@ public class ElementsPage : PageBase
         return outputText;
     }
 
-    public bool isOutputWindowPresent()
+    [AllureStep("Getting output window status")]
+    public bool IsOutputWindowPresent()
     {
         log.Information($"|{PAGE_NAME}| Checking presence of output window");
         var outputField = browser.GetElementFromDOM(repo.OutputMessage);
