@@ -11,7 +11,7 @@
   "driver": {
     "BrowserName": "chrome", // [chrome/firefox] Default BrowserName: Chrome 
     "BrowserType": "remote", // [local/remote] BrowserType local
-    "GridHubUrl": "http://localhost:4444/wd/hub", // default is local. Grid url format --https://localhost:4444/wd/hub 
+    "GridHubUrl": "http://selenoid:4444/wd/hub", // REMOTE - [http://selenoid:4444/wd/hub / LOCAL - http://localhost:4444/wd/hub]
     "WaitSeconds": 10,
     "Headless": false
   },
