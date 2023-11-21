@@ -1,9 +1,11 @@
-﻿using Automation.Framework.Common.Abstractions;
+﻿using Allure.Net.Commons;
+using Automation.Framework.Common.Abstractions;
 using Automation.Framework.Core.Configuration;
 using Automation.Framework.Core.Dependencies;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
+using OpenQA.Selenium;
 
 namespace AutomationTestsPOM;
 
@@ -34,8 +36,11 @@ public class TestBase
         }
         else if (outcome == TestStatus.Failed)
         {
-            //webDriver.TakeScreenshot($"test_failed + {TestContext.CurrentContext.Test.FullName}");
             log.Error($"Test failed for reason: {TestContext.CurrentContext.Result.Message}");
+
+            Screenshot screenshot = (webDriver.WebDriver as ITakesScreenshot).GetScreenshot();
+            screenshot.SaveAsFile("screenshot.png", ScreenshotImageFormat.Png);
+            AllureLifecycle.Instance.AddAttachment("image1.png", "image/png", screenshot.AsByteArray);
         }
         else
         {
