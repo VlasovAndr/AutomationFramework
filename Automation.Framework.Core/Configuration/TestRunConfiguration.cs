@@ -34,8 +34,8 @@ public class TestRunConfiguration
             var browserFromVar = Environment.GetEnvironmentVariable("BROWSER_NAME");
             var browserTypeFromVar = Environment.GetEnvironmentVariable("BROWSER_TYPE");
 
-            Enum.TryParse(browserFromVar, out BrowserName browserName);
-            Enum.TryParse(browserTypeFromVar, out BrowserType browserType);
+            Enum.TryParse(browserFromVar, true, out BrowserName browserName);
+            Enum.TryParse(browserTypeFromVar, true, out BrowserType browserType);
 
             Driver.BrowserName = string.IsNullOrEmpty(browserFromVar)
                                              ? Driver.BrowserName
