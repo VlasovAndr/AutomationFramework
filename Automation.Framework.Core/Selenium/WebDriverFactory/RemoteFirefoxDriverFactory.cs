@@ -8,7 +8,7 @@ namespace Automation.Framework.Core.WebUI.Selenium.WebDriverFactory;
 
 public class RemoteFirefoxDriverFactory : INamedBrowserFactory
 {
-    public BrowserName Name => BrowserName.Chrome;
+    public BrowserName Name => BrowserName.Firefox;
     public BrowserType Type => BrowserType.Remote;
     private TestRunConfiguration testRunConfiguration;
     private ILogging log;
