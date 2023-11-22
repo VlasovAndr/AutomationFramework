@@ -30,7 +30,10 @@ public class WebDriverWrapper : IWebDriverWrapper
             .FirstOrDefault(f => f.Name == config.Driver.BrowserName && f.Type == config.Driver.BrowserType);
 
         if (factory == null)
-            throw new Exception($"No factory registered for {config.Driver.BrowserType} browser.");
+        {
+            throw new Exception(
+                $"No factory registered for BrowserName: '{config.Driver.BrowserName}' and BrowserType:'{config.Driver.BrowserType}'.");
+        }
 
         return factory.Create();
     }
