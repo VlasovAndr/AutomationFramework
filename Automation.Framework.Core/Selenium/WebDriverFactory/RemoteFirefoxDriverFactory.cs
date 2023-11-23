@@ -28,7 +28,7 @@ public class RemoteFirefoxDriverFactory : INamedBrowserFactory
         options.SetPreference("pdfjs.disabled", true);  // to always open PDF externally
         options.SetPreference("browser.download.manager.showWhenStarting", false);
         options.SetPreference("browser.safebrowsing.enabled", true);
-        options.AddArgument("no-sandbox");
+        //options.AddArgument("no-sandbox");
         options.AddArgument("--disable-gpu");
         options.AddArgument("--disable-popup-blocking");
         options.SetPreference("browser.download.dir", testRunConfiguration.Framework.DownloadedLocation);
