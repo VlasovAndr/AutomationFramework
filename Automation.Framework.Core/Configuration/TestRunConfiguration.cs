@@ -52,6 +52,8 @@ public class TestRunConfiguration
             TargetEnvironment = data["enviroment"][effectiveTargetEnv.ToLower()].ToObject<TargetEnvironment>();
 
             log.Information($"Selected target environment: {effectiveTargetEnv}.");
+            log.Information($"Selected browser name: {Driver.BrowserName}.");
+            log.Information($"Selected browser type: {Driver.BrowserType}.");
 
         }
         catch (JsonException ex)
